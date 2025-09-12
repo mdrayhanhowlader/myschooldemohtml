@@ -4,15 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>School Management Login</title>
-  <link rel="stylesheet" href="assets/style.css">
-  <style>
-    .error-msg {
-      color: red;
-      margin-top: 10px;
-      font-size: 14px;
-      display: none;
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
@@ -23,77 +15,19 @@
       
       <form id="loginForm">
         <label for="studentId">User ID</label>
-        <input type="text" id="studentId" placeholder="Enter ID" required>
+        <input type="text" id="studentId" placeholder="Enter ID">
 
         <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Enter Password" required>
+        <input type="password" id="password" placeholder="Enter Password">
 
         <button type="submit">Login</button>
-        <p id="error" class="error-msg">❌ Invalid ID or Password</p>
       </form>
 
-      <p class="note">
-        Demo IDs:<br>
-        👩‍🎓 Student → <b>student01 / 12345</b><br>
-        👨‍🏫 Teacher → <b>teacher01 / 12345</b><br>
-        🧑‍💼 Admin → <b>admin01 / 12345</b>
-      </p>
+      <p class="note">Demo (Student) → ID: <b>student01</b> | Pass: <b>12345</b></p>
+      <p id="errorMsg" class="error"></p>
     </div>
   </div>
 
-  <script>
-    // Demo users
-    const users = [
-      { id: "student01", password: "12345", role: "student" },
-      { id: "teacher01", password: "12345", role: "teacher" },
-      { id: "admin01", password: "12345", role: "admin" }
-    ];
-
-    document.getElementById("loginForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      
-      const enteredId = document.getElementById("studentId").value.trim();
-      const enteredPass = document.getElementById("password").value.trim();
-      const errorMsg = document.getElementById("error");
-
-      // Check credentials
-      const user = users.find(u => u.id === enteredId && u.password === enteredPass);
-
-      if (user) {
-        // save to localStorage
-        localStorage.setItem("loggedInUser", JSON.stringify(user));
-        errorMsg.style.display = "none";
-
-        // redirect based on role (but check if file exists first)
-        let targetPage = "";
-        if (user.role === "student") targetPage = "students.html";
-        if (user.role === "teacher") targetPage = "teachers.html";
-        if (user.role === "admin") targetPage = "dashboard.html";
-
-        // try fetch to check file exists
-        fetch(targetPage, { method: "HEAD" })
-          .then(res => {
-            if (res.ok) {
-              window.location.href = targetPage;
-            } else {
-              errorMsg.innerText = "❌ Target page not found!";
-              errorMsg.style.display = "block";
-              localStorage.removeItem("loggedInUser");
-            }
-          })
-          .catch(() => {
-            errorMsg.innerText = "❌ Target page not found!";
-            errorMsg.style.display = "block";
-            localStorage.removeItem("loggedInUser");
-          });
-
-      } else {
-        // show error
-        errorMsg.innerText = "❌ Invalid ID or Password";
-        errorMsg.style.display = "block";
-      }
-    });
-  </script>
-
+  <script src="assets/js/login.js"></script>
 </body>
 </html>

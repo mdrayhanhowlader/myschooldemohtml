@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/student.css" />
+</head>
+<body>
+  <!-- auth.js will redirect to login if not allowed -->
+  <script src="assets/js/auth.js"></script>
+
+  <div class="student-wrap">
+    <!-- Top header -->
+    <header class="top-header">
+      <div class="left-block">
+        <img id="profilePhoto" src="assets/img/default.png" alt="profile" class="profile-thumb" />
+        <div class="student-meta">
+          <div id="studentNameTitle" class="student-name">Student Name</div>
+          <div class="student-id">ID: <span id="studentIdTitle"></span></div>
+        </div>
+      </div>
+
+      <!-- small profile box on right with logout (less intrusive) -->
+      <div class="right-block">
+        <div class="phone-display">📞 <span id="phoneDisplay">-</span></div>
+        <button id="logoutBtn" class="btn small">Logout</button>
+      </div>
+    </header>
+
+    <!-- Menu bar -->
+    <nav class="menu-bar">
+      <ul>
+        <li><a href="#" data-section="overview">Overview</a></li>
+        <li><a href="#" data-section="fees">Fees</a></li>
+        <li><a href="#" data-section="attendance">Attendance</a></li>
+        <li><a href="#" data-section="results">Results</a></li>
+        <li><a href="#" data-section="leave">Leave</a></li>
+        <li><a href="#" data-section="profile">Profile</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main content -->
+    <main class="main-content">
+      <!-- Overview -->
+      <section id="overview" class="content-section active">
+        <h2>Overview</h2>
+        <div class="cards-grid">
+          <div class="card">
+            <h3>Attendance</h3>
+            <p id="overviewAttendance">--%</p>
+            <p id="attendanceWarn" class="warn" style="display:none">⚠️ Attendance below 80% — please consult your teacher.</p>
+          </div>
+          <div class="card">
+            <h3>Result (Latest)</h3>
+            <p id="overviewResult">GPA: --</p>
+          </div>
+          <div class="card">
+            <h3>Fees</h3>
+            <p id="overviewFees">Status: --</p>
+          </div>
+          <div class="card">
+            <h3>Syllabus</h3>
+            <p>See subject syllabus in your class.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Fees section -->
+      <section id="fees" class="content-section">
+        <h2>Fees Payment</h2>
+
+        <div class="fee-box">
+          <label>Payment Mode</label>
+          <select id="paymentType">
+            <option value="year">Full Year</option>
+            <option value="month">Monthly</option>
+          </select>
+
+          <div id="monthChooser" class="hidden">
+            <p>Select months to pay (this year):</p>
+            <div class="months-grid" id="monthsGrid">
+              <!-- will be injected -->
+            </div>
+          </div>
+
+          <div class="extra-fees">
+            <label><input type="checkbox" id="feeExam"> Exam Fees</label>
+            <label><input type="checkbox" id="feeBooks"> Book Fees</label>
+            <label><input type="checkbox" id="feeOther"> Other Fees</label>
+          </div>
+
+          <label>Amount to Pay (BDT)</label>
+          <input id="amountInput" type="number" placeholder="e.g. 2000" />
+
+          <label>bKash Transaction ID</label>
+          <input id="trxInput" type="text" placeholder="e.g. TX123456789" />
+
+          <button id="submitPayment" class="btn">Submit Payment</button>
+          <p id="paymentMessage" class="statusMessage"></p>
+        </div>
+
+        <div class="payments-list">
+          <h4>Your Payments</h4>
+          <table id="paymentsTable" class="simple-table">
+            <thead><tr><th>Txn</th><th>Type</th><th>Months</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Attendance section -->
+      <section id="attendance" class="content-section">
+        <h2>Attendance Record</h2>
+        <div class="attendance-grid" id="attendanceGrid">
+          <!-- month-wise small cards -->
+        </div>
+        <p id="attendanceNote" style="margin-top:12px; color:#666; font-size:14px"></p>
+      </section>
+
+      <!-- Results -->
+      <section id="results" class="content-section">
+        <h2>Results</h2>
+        <div class="filter-row">
+          <label for="resultYear">Year</label>
+          <select id="resultYear"></select>
+
+          <label for="resultSemester">Semester</label>
+          <select id="resultSemester">
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+          </select>
+          <button id="loadResult" class="btn small">Load</button>
+        </div>
+
+        <div id="resultsArea">
+          <!-- result table will show -->
+        </div>
+      </section>
+
+      <!-- Leave -->
+      <section id="leave" class="content-section">
+        <h2>Leave Application</h2>
+        <form id="leaveForm">
+          <label>Leave Type</label>
+          <select id="leaveType"><option value="sick">Sick</option><option value="personal">Personal</option></select>
+
+          <label>From</label>
+          <input id="leaveFrom" type="date" />
+
+          <label>To</label>
+          <input id="leaveTo" type="date" />
+
+          <label>Reason</label>
+          <textarea id="leaveReason" rows="3"></textarea>
+
+          <button type="submit" class="btn">Apply</button>
+        </form>
+
+        <h4 style="margin-top:18px">Your Applications</h4>
+        <table id="leaveTable" class="simple-table">
+          <thead><tr><th>Type</th><th>From</th><th>To</th><th>Reason</th><th>Status</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <!-- Profile -->
+      <section id="profile" class="content-section">
+        <h2>Profile</h2>
+        <div class="profile-edit">
+          <div class="profile-photo-edit">
+            <img id="profilePhotoBig" src="assets/img/default.png" alt="profile" />
+            <input id="photoUpload" type="file" accept="image/*" />
+          </div>
+          <div class="profile-fields">
+            <label>Name (not editable)</label>
+            <input id="profileName" type="text" disabled />
+
+            <label>Phone</label>
+            <input id="profilePhone" type="text" placeholder="01XXXXXXXXX" />
+
+            <button id="saveProfile" class="btn">Save Profile</button>
+            <p id="profileMsg" class="statusMessage"></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/student.js"></script>
+</body>
+</html>
