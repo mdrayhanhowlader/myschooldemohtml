@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Teacher Dashboard</title>
+  <!-- common + teacher specific CSS (add these files in assets/css/) -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/teacher.css" />
+</head>
+<body>
+  <!-- run auth early in JS to prevent unauthorised access (assets/js/auth.js) -->
+  <script src="assets/js/auth.js"></script>
+
+  <div class="teacher-wrap">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <h2>🏫 My School</h2>
+        <p class="subtitle">Teacher Panel</p>
+      </div>
+
+      <nav class="side-menu">
+        <ul>
+          <li><a href="#" data-section="dash" class="active">📊 Dashboard</a></li>
+          <li><a href="#" data-section="classes">🏷 Classes</a></li>
+          <li><a href="#" data-section="attendance">📝 Attendance</a></li>
+          <li><a href="#" data-section="marks">✏️ Marks</a></li>
+          <li><a href="#" data-section="students">👨‍🎓 Students</a></li>
+          <li><a href="#" data-section="salary">💰 Salary</a></li>
+          <li><a href="#" data-section="myattendance">📅 My Attendance</a></li>
+          <li><a href="#" data-section="leave">🏖 Leave</a></li>
+          <li><a href="#" data-section="profile">⚙️ Profile</a></li>
+        </ul>
+      </nav>
+
+      <div class="side-footer">
+        <button id="logoutBtn" class="btn small">Logout</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-area">
+
+      <!-- HEADER -->
+      <header class="topbar">
+        <div class="top-left">
+          <h1 id="teacherTitle">Welcome, <span id="teacherName">Teacher</span></h1>
+          <div class="meta small">ID: <span id="teacherId">T-001</span> • Role: Teacher</div>
+        </div>
+        <div class="top-right">
+          <!-- quick stats -->
+          <div class="quick-stats">
+            <div class="stat">
+              <div class="label">Assigned Classes</div>
+              <div id="statClasses" class="value">7,8,9</div>
+            </div>
+            <div class="stat">
+              <div class="label">Pending Leaves</div>
+              <div id="statLeaves" class="value">2</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT SECTIONS -->
+      <section id="dash" class="section active">
+        <h2>Dashboard Overview</h2>
+        <div class="cards-grid">
+          <div class="card">
+            <h3>Today's Attendance</h3>
+            <p id="todayAttendance">Not taken</p>
+            <small class="muted">Manual / Automatic toggle below</small>
+          </div>
+          <div class="card">
+            <h3>Classes</h3>
+            <p id="assignedClasses">7, 8, 9</p>
+          </div>
+          <div class="card">
+            <h3>Pending Actions</h3>
+            <p id="pendingActions">Leave approvals: <strong>2</strong></p>
+          </div>
+          <div class="card">
+            <h3>Salary</h3>
+            <p id="salaryStatus">Next pay: 30 Sep</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLASSES: select class to see students -->
+      <section id="classes" class="section">
+        <h2>Assigned Classes</h2>
+
+        <div class="row">
+          <label for="classSelect">Select Class</label>
+          <select id="classSelect">
+            <!-- options injected by JS e.g. 7,8,9 -->
+          </select>
+
+          <label for="sectionSelect">Section</label>
+          <select id="sectionSelect">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+          </select>
+
+          <button id="loadStudentsBtn" class="btn">Load Students</button>
+        </div>
+
+        <div class="students-list">
+          <table class="simple-table" id="classStudentsTable">
+            <thead>
+              <tr><th>ID</th><th>Name</th><th>Roll</th><th>Phone</th><th>Action</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ATTENDANCE: manual tick or mark automatic pending -->
+      <section id="attendance" class="section">
+        <h2>Take Attendance</h2>
+
+        <div class="attendance-controls">
+          <label><input type="radio" name="attMode" value="manual" checked> Manual</label>
+          <label><input type="radio" name="attMode" value="auto"> Automatic (biometric)</label>
+          <button id="markAllPresent" class="btn small">Mark All Present</button>
+          <button id="saveAttendanceBtn" class="btn">Save Attendance</button>
+        </div>
+
+        <div class="attendance-table-wrap">
+          <table class="simple-table" id="takeAttendanceTable">
+            <thead><tr><th>#</th><th>ID</th><th>Name</th><th>Present</th><th>Profile</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <p class="muted">If automatic mode used, attendance will be flagged as <strong>Pending Auto</strong> until system confirmation.</p>
+      </section>
+
+      <!-- MARKS -->
+      <section id="marks" class="section">
+        <h2>Enter Marks / Class Test</h2>
+
+        <div class="row">
+          <label for="marksClass">Class</label>
+          <select id="marksClass"></select>
+
+          <label for="marksSection">Section</label>
+          <select id="marksSection">
+            <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          </select>
+
+          <label for="marksSubject">Subject</label>
+          <input id="marksSubject" type="text" placeholder="e.g. Math" />
+        </div>
+
+        <div class="marks-table">
+          <table class="simple-table" id="marksTable">
+            <thead><tr><th>ID</th><th>Name</th><th>Roll</th><th>Marks</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <button id="saveMarksBtn" class="btn">Save Marks</button>
+        </div>
+      </section>
+
+      <!-- STUDENTS: full list + profile modal -->
+      <section id="students" class="section">
+        <h2>All Students (Your Classes)</h2>
+        <div class="students-table-wrap">
+          <table class="simple-table" id="allStudentsTable">
+            <thead><tr><th>ID</th><th>Name</th><th>Class</th><th>Section</th><th>Phone</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SALARY -->
+      <section id="salary" class="section">
+        <h2>Salary & Payroll</h2>
+        <div class="card">
+          <p>Monthly Salary: <strong id="teacherSalary">৳ 45,000</strong></p>
+          <p>Last Paid: <strong id="lastPaid">2025-08-30</strong></p>
+          <p>Status: <span id="salaryStat">Paid</span></p>
+        </div>
+        <div style="margin-top:12px;">
+          <label for="salaryNote">Add Note (optional)</label>
+          <input id="salaryNote" type="text" placeholder="e.g. Bank TX 12345" />
+          <button id="requestSalaryBtn" class="btn">Request Salary Info</button>
+        </div>
+      </section>
+
+      <!-- MY ATTENDANCE (teacher's own) -->
+      <section id="myattendance" class="section">
+        <h2>My Attendance</h2>
+        <div id="teacherAttendanceGrid" class="attendance-grid"></div>
+      </section>
+
+      <!-- LEAVE -->
+      <section id="leave" class="section">
+        <h2>Leave Applications</h2>
+
+        <form id="teacherLeaveForm">
+          <label>Type</label>
+          <select id="teacherLeaveType"><option value="sick">Sick</option><option value="personal">Personal</option></select>
+          <label>From</label><input id="teacherLeaveFrom" type="date" />
+          <label>To</label><input id="teacherLeaveTo" type="date" />
+          <label>Reason</label><textarea id="teacherLeaveReason" rows="3"></textarea>
+          <button type="submit" class="btn">Apply</button>
+        </form>
+
+        <h4 style="margin-top:16px">Your Applications</h4>
+        <table class="simple-table" id="teacherLeaveTable">
+          <thead><tr><th>Type</th><th>From</th><th>To</th><th>Status</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <!-- PROFILE -->
+      <section id="profile" class="section">
+        <h2>Profile</h2>
+        <div class="profile-edit">
+          <img id="teacherPhoto" src="assets/img/default.png" alt="photo" class="profile-thumb-large" />
+          <div class="profile-fields">
+            <label>Name (readonly)</label>
+            <input id="teacherNameInput" type="text" disabled />
+
+            <label>Phone</label>
+            <input id="teacherPhone" type="text" />
+
+            <label>Upload Photo</label>
+            <input id="teacherPhotoUpload" type="file" accept="image/*" />
+
+            <div style="margin-top:12px">
+              <button id="saveProfileBtn" class="btn">Save Profile</button>
+            </div>
+            <p id="profileMsg" class="statusMessage"></p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Student Profile Modal -->
+  <div id="studentModal" class="modal hidden">
+    <div class="modal-inner">
+      <button class="modal-close">&times;</button>
+      <div id="studentModalContent">
+        <!-- injected by JS: profile picture, attendance summary, results -->
+      </div>
+    </div>
+  </div>
+
+  <!-- teacher JS (implement behavior in next message) -->
+  <script src="assets/js/teacher.js"></script>
+</body>
+</html>
